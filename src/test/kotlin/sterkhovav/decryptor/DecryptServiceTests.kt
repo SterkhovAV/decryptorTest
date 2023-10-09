@@ -1,0 +1,53 @@
+package sterkhovav.decryptor
+
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+
+@SpringBootTest
+class DecryptServiceTests(
+
+) {
+
+    @Autowired
+    lateinit var decryptService: DecryptService
+
+    @Test
+    fun decryptTest() {
+        val input = """c0880ac7c6b40f03006dff4e09a49b42fbc4c4948058f4a8bc5bf9d04be76b
+            |032dbf07748743ea0168b5e949724439a0ff8b450eb3da7fad44abb8f3f93c074c0517dc
+            |43062dbfb4cca597914741ddcf08f5667f9f53a5e0b637fc3812f4bbbe41113f076eb690
+            |df6812e95fd06c1397f3d140e792a6123a51449cf370f4fd0e36fb20c3a1018221120e09
+            |a4c4c116ae2ed18ccb9e4cae35bb75a4bfac64d5f2d2cf57d2cca0d36bfd0bb7eebd1254
+            |73a740852a9f9618db7e99f064f8b63b2817dde65c90d21cbbb962ab54d75d9b1d3d6c3b
+            |2434a0d9a33d61cb8e558819fdb2ada2f300911642ee154dedd0d1db2c91da3a56c91b26
+            |716f01cd56c91b26716f01cdf748a158798f6fa454657ab0bad949cb6bec1d3afde27579
+            |bf39f94e1002bf829ec1e0a6ce5791531f8745d8a234d17bab2bb54468100341173fab3f
+            |58a31867db5868e57adaf711d378f8ac4c6a25ac734cad655318319a5789fea59d950d09
+            |d362baf0f43aec8eec6d8b35d4ae3ddac5ffeebf78fff2efa36b8db92eb2a9bf9b1326cc
+            |b8e850ebb069366b0d9779dd69e0ef88b388f358b2a4cc9e92375c290a0789c4c38f41d8
+            |41349c1d4613ce61ebc2""".trimMargin().replace("\\s".toRegex(), "")
+        val key = "0123456789876543"
+
+        val data = decryptService.decrypt(input, key)
+
+        val testImei = "861694033595016".toULong()
+        val testPayload = """09470004100e00000104d71770380210000000001c18000000000000
+            |0600000009153839373031393932313035383136393830333466000d1052545530322e30
+            |322e3030343000000012040000000013041c180000140400000000150406000000160401
+            |0e00001704010e00001804010e00001904010e00001a04010e00001b04010e00001c0401
+            |0e00001d04010e00001e01001f010020010021010024011f2511426565204c696e652047
+            |534d00000000002604fc0102002704830d00002d01032e02e0012f05ffffff0000300103
+            |3101003301003404ed0000003d204547534d5f4d4f444500000000000000000000000000
+            |000000000000000000004401184f04a70d00005004720d0000570460ea00005804220600
+            |00590460ea00005a04e01500005b01005c01035d01005e01005f01006001016101026201
+            |044d01006a01016b01016c01016d01016e0428100000720100730cc7c34f5c4f5cc22722
+            |e89700c6020000c704201c0000c804302a0000c90402000000ca0103cb0105cc0100cd01
+            |0ace0105cf0100d00100dd0101de02540bdf025802e0040f00000000000000000000""".trimMargin()
+            .replace("\\s".toRegex(), "")
+
+        Assertions.assertEquals(testImei, data.imei)
+        Assertions.assertEquals(testPayload, data.payload)
+    }
+}
